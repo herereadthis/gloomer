@@ -2,6 +2,7 @@
 
 * [Read setup docs](./setup.md)
 * [Information about DCA](dca.md)
+* [To-Do list](todo.md)
 
 ## Resources
 
