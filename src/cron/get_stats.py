@@ -24,6 +24,7 @@ def round_seconds(obj: dt.datetime) -> dt.datetime:
         obj += dt.timedelta(seconds=1)
     return obj.replace(microsecond=0)
 
+
 def create_temp_directory():
     # Path 
     path = '../../tmp'
