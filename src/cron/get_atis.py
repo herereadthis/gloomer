@@ -1,6 +1,7 @@
 import os
 import re
 import json
+import string
 import requests
 import pandas as pd
 import datetime as dt
@@ -18,8 +19,11 @@ def fetch(url: str) -> list:
 def split_sentences(str):
     regex = '(?<!\w\.\w.)(?<![A-Z][a-z]\.)(?<=\.|\?)\s'
     result = re.split(regex, str)
-    for sentence in result:
-        print(sentence)
+    return result
+
+
+def get_words(test_string):
+    return re.sub('['+string.punctuation+']', '', test_string).split()
 
 
 def process(atis_reports: list) -> pd.DataFrame:
@@ -30,12 +34,20 @@ def process(atis_reports: list) -> pd.DataFrame:
         print('\n')
         print(datis)
         print('\n')
-        split_sentences(datis)
+        sentences = split_sentences(datis)
+        first_sentence_words = get_words(sentences[0])
+        for word in first_sentence_words:
+            print(word)
+        for sentence in sentences:
+            print(sentence)
 
 
         processed.append({
-            'airport': atis['airport'],
-            'type': atis['type'],
+            'airport_iata': first_sentence_words[0],
+            'airport_icao': atis['airport'],
+            # 'type': atis['type'],
+            'icao': first_sentence_words[3],
+            'time': first_sentence_words[4],
             'datis': atis['datis'],
         })
     return pd.DataFrame(processed)
