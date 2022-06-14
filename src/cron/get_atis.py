@@ -84,33 +84,46 @@ def get_time(atis_time):
 def process(atis_reports: list) -> pd.DataFrame:
     processed = []
     print('\n')
-    for atis in atis_reports:
-        datis = atis['datis']
-        sentences = split_sentences(datis)
 
-        atis_time = re.search('\d{4}Z', sentences[0]).group(0)
-        time_values = get_time(atis_time)
+    atis = atis_reports[0]
+    datis = atis['datis']
+    sentences = split_sentences(datis)
 
-        entry = {
-            'iata_code': re.search('^[A-Z]+', sentences[0]).group(0),
-            'icao_code': atis['airport'],
-            'atis_icao': re.search(r'\b[A-Z]{1}\b', sentences[0]).group(0),
-            'atis_time': atis_time,
-            'atis_ts': time_values['atis_utc'],
-            'retrieved_ts': time_values['retrieved_utc'],
-            **get_runways(sentences),
-            'atis': sentences
-        }
+    atis_time = re.search('\d{4}Z', sentences[0]).group(0)
+    time_values = get_time(atis_time)
 
-        pprint.pprint(entry)
+    entry = {
+        'iata_code': re.search('^[A-Z]+', sentences[0]).group(0),
+        'icao_code': atis['airport'],
+        'atis_icao': re.search(r'\b[A-Z]{1}\b', sentences[0]).group(0),
+        'atis_time': atis_time,
+        'atis_ts': time_values['atis_utc'],
+        'retrieved_ts': time_values['retrieved_utc'],
+        **get_runways(sentences),
+        'atis': sentences
+    }
 
-        processed.append(entry)
+    pprint.pprint(entry)
+
+    processed.append(entry)
+
     print('\n')
     return pd.DataFrame(processed)
 
 
 def save(atis_reports: pd.DataFrame, path: str) -> None:
     atis_reports.to_csv(path, index=False)
+
+
+def save_append(atis_reports: pd.DataFrame, path: str) -> None:
+    atis_reports.to_csv(path, index=False, mode='a', header=False)
+
+
+
+def save_empty_file(path):
+    df = pd.DataFrame(columns=['iata_code', 'icao_code', 'atis_icao'])
+    # df = pd.DataFrame(list())
+    df.to_csv(path)
 
 
 def round_seconds(obj: dt.datetime) -> dt.datetime:
@@ -125,10 +138,29 @@ def get_timestamp_name():
     utc_time_seconds = round_seconds(utc_time)
     return dt.datetime.strptime(str(utc_time_seconds), '%Y-%m-%d %H:%M:%S').strftime('%Y-%m-%d-%H-%M-%S')
 
+def get_daystamp_name():
+    local_time = dt.datetime.now()
+    local_time_seconds = round_seconds(local_time)
+    return dt.datetime.strptime(str(local_time_seconds), '%Y-%m-%d %H:%M:%S').strftime('%Y-%m-%d')
+
 
 if __name__ == '__main__':
+    duh_path = os.path.normpath('~/Sites/gloomer/tmp/')
+    abs_path = os.path.abspath(os.path.normpath('tmp/'))
+
+    onlyfiles = [f for f in os.listdir(abs_path) if os.path.isfile(os.path.join(abs_path, f))]
+
     atis_reports = fetch(url=ATIS_URL)
     atis_reports = process(atis_reports=atis_reports)
-    timestamp_name = get_timestamp_name()
-    path = os.path.normpath(f'~/Sites/gloomer/tmp/atis_{AIRPORT_CODE}_{timestamp_name}.csv')
-    save(atis_reports=atis_reports, path=path)
+
+    proposed_file_name = f'atis_{AIRPORT_CODE}_{get_daystamp_name()}.csv'
+    new_file_path = os.path.abspath(os.path.join(abs_path, proposed_file_name))
+    print(f'proposed_file_name: {proposed_file_name}')
+
+
+    if (proposed_file_name in onlyfiles):
+        print('file already exists!')
+        save_append(atis_reports=atis_reports, path=new_file_path)
+    else:
+        print(f'new_file_path: {new_file_path}')
+        save(atis_reports=atis_reports, path=new_file_path)
