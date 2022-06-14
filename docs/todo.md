@@ -7,12 +7,12 @@
 
 ## Monitoring
 
-* https://github.com/nfacha/adsb-stats-logger
+* Stats Logger Github: [nfacha/adsb-stats-logger](https://github.com/nfacha/adsb-stats-logger)
 * Reddit
-  * [Python3 script to profile dump1090 output and maintain all-time records/statistics - any interest?](https://www.reddit.com/r/ADSB/comments/rutot0/python3_script_to_profile_dump1090_output_and/)
+  * [Python3 script to profile dump1090 output and maintain all-time records/statistics](https://www.reddit.com/r/ADSB/comments/rutot0/python3_script_to_profile_dump1090_output_and/)
 * Python script to query receiver and send stats to Telegraf, Influx
   * Article: [Monitoring the sky - dump1090 to InfluxDB](https://c0t0d0s0.org/aviation/2021/02/24/dump1090-to-influxdb.html) 
-  * Github: [jmoekamp/adsb2influx](https://github.com/jmoekamp/
+  * Repository: [jmoekamp/adsb2influx](https://github.com/jmoekamp/)
 * Get IP address via JS: [stackOverflow](https://stackoverflow.com/questions/3653065/get-local-ip-address-in-node-js)
 
 ## Shopping List
@@ -23,8 +23,8 @@
 
 * Take pictures of the planes that fly by [github.com/IQTLabs/SkyScan](https://github.com/IQTLabs/SkyScan)
 * Send Tar1090 screenshots (Selenium + Chrome) to Twitter when planes fly overhead
-  * Repository: [shbisson/OverPutney](https://github.com/shbisson/OverPutney)
   * Article: [How I built a twitterbot to track planes passing overhead](https://www.zdnet.com/article/raspberry-pi-4-how-i-built-a-twitterbot-to-track-planes-passing-overhead/)
+  * Repository: [shbisson/OverPutney](https://github.com/shbisson/OverPutney)
 
 
 
