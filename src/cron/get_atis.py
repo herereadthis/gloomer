@@ -2,9 +2,7 @@ import os
 import json
 import requests
 import pandas as pd
-import pprint
 import datetime as dt
-
 
 from parsed_atis import ParsedAtis
 
@@ -42,35 +40,38 @@ def get_daystamp_name():
     return dt.datetime.strptime(str(local_time_seconds), '%Y-%m-%d %H:%M:%S').strftime('%Y-%m-%d')
 
 
-def process(atis_report: dict) -> pd.DataFrame:
-    processed = []
-    print('\n')
-    pprint.pprint(atis_report)
-    processed.append(atis_report)
-    print('\n')
-    return pd.DataFrame(processed)
+def process_atis() -> pd.DataFrame:
+    atis_reports = fetch(url=ATIS_URL)
+    atis_report = ParsedAtis(atis_reports[0])
+    parsed_atis = atis_report.get_parsed_atis()
+    return pd.DataFrame([parsed_atis])
+
+
+def get_last_entry_cell(file_path, cell_name) -> str:
+    df = pd.read_csv(file_path)
+    return df.loc[df.index[-1],cell_name]
 
 
 if __name__ == '__main__':
-
     duh_path = os.path.normpath('~/Sites/gloomer/tmp/')
     abs_path = os.path.abspath(os.path.normpath('tmp/'))
 
     onlyfiles = [f for f in os.listdir(abs_path) if os.path.isfile(os.path.join(abs_path, f))]
 
-    atis_reports = fetch(url=ATIS_URL)
-
-    atis_report = ParsedAtis(atis_reports[0])
-    parsed_atis = process(atis_report=atis_report.get_parsed_atis())
+    atis_dataframe = process_atis()
 
     proposed_file_name = f'atis_{AIRPORT_CODE}_{get_daystamp_name()}.csv'
-    new_file_path = os.path.abspath(os.path.join(abs_path, proposed_file_name))
+    file_path = os.path.abspath(os.path.join(abs_path, proposed_file_name))
     print(f'proposed_file_name: {proposed_file_name}')
 
-
     if (proposed_file_name in onlyfiles):
-        print('file already exists!')
-        save_append(atis_reports=parsed_atis, path=new_file_path)
+        last_icao = get_last_entry_cell(file_path, 'atis_icao')
+        current_icao = atis_dataframe.loc[0, 'atis_icao']
+        if (last_icao == current_icao):
+            print('last atis already recorded!')
+        else:
+            print('adding new atis to existing file!')
+            save_append(atis_reports=atis_dataframe, path=file_path)
     else:
-        print(f'new_file_path: {new_file_path}')
-        save(atis_reports=atis_reports, path=new_file_path)
+        print(f'new_file_path: {file_path}')
+        save(atis_reports=atis_dataframe, path=file_path)

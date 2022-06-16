@@ -66,7 +66,7 @@ class ParsedAtis:
         }
     
     def get_parsed_atis(self):
-        return {
+        parsed_atis = {
             'iata_code': self.iata_code,
             'icao_code': self.icao_code,
             'atis_icao': self.atis_icao,
@@ -76,10 +76,13 @@ class ParsedAtis:
             **self.runways,
             'atis': self.sentences
         }
+        print('\n')
+        pprint(parsed_atis)
+        print('\n')
+        return parsed_atis
 
     @staticmethod
     def get_runway_numbers(str):
-        print(f'runway string: {str}')
         return re.findall(r'\d+\w*', str)
 
     @staticmethod
@@ -93,7 +96,3 @@ class ParsedAtis:
         if obj.microsecond >= 500_000:
             obj += dt.timedelta(seconds=1)
         return obj.replace(microsecond=0)
-
-
-
-
