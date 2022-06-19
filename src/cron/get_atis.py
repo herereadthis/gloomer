@@ -3,8 +3,13 @@ import json
 import requests
 import pandas as pd
 import datetime as dt
+import configparser
 
+import utils
 from parsed_atis import ParsedAtis
+
+config = configparser.ConfigParser()
+config.read('../../config.ini')
 
 AIRPORT_CODE = 'kdca'
 ATIS_ENDPOINT = 'https://datis.clowd.io/api'
@@ -27,19 +32,6 @@ def save_append(atis_reports: pd.DataFrame, path: str) -> None:
     atis_reports.to_csv(path, index=False, mode='a', header=False)
 
 
-def round_seconds(obj: dt.datetime) -> dt.datetime:
-    if obj.microsecond >= 500_000:
-        obj += dt.timedelta(seconds=1)
-    return obj.replace(microsecond=0)
-
-def get_daystamp_name():
-    local_time = dt.datetime.now()
-    local_time_seconds = round_seconds(local_time)
-    # includes hour, minute, seconds
-    # return dt.datetime.strptime(str(utc_time_seconds), '%Y-%m-%d %H:%M:%S').strftime('%Y-%m-%d-%H-%M-%S')
-    return dt.datetime.strptime(str(local_time_seconds), '%Y-%m-%d %H:%M:%S').strftime('%Y-%m-%d')
-
-
 def process_atis() -> pd.DataFrame:
     atis_reports = fetch(url=ATIS_URL)
     atis_report = ParsedAtis(atis_reports[0])
@@ -52,19 +44,28 @@ def get_last_entry_cell(file_path, cell_name) -> str:
     return df.loc[df.index[-1],cell_name]
 
 
-if __name__ == '__main__':
-    duh_path = os.path.normpath('~/Sites/gloomer/tmp/')
-    abs_path = os.path.abspath(os.path.normpath('tmp/'))
+def get_log_path():
+    user_root = utils.get_user_root()
+    log_dir = config['atis']['log_directory']
+    log_path = f'{user_root}/{log_dir}'
 
-    onlyfiles = [f for f in os.listdir(abs_path) if os.path.isfile(os.path.join(abs_path, f))]
+    if (os.path.exists(log_path) == False):
+        os.makedirs(log_path)
+    
+    return log_path
+
+
+if __name__ == '__main__':
+    log_path = get_log_path()
+    only_files = [f for f in os.listdir(log_path) if os.path.isfile(os.path.join(log_path, f))]
 
     atis_dataframe = process_atis()
 
-    proposed_file_name = f'atis_{AIRPORT_CODE}_{get_daystamp_name()}.csv'
-    file_path = os.path.abspath(os.path.join(abs_path, proposed_file_name))
+    proposed_file_name = f'atis_{AIRPORT_CODE}_{utils.get_daystamp_name()}.csv'
+    file_path = os.path.abspath(os.path.join(log_path, proposed_file_name))
     print(f'proposed_file_name: {proposed_file_name}')
 
-    if (proposed_file_name in onlyfiles):
+    if (proposed_file_name in only_files):
         last_icao = get_last_entry_cell(file_path, 'atis_icao')
         current_icao = atis_dataframe.loc[0, 'atis_icao']
         if (last_icao == current_icao):
