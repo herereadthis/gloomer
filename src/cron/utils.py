@@ -6,7 +6,15 @@ from sys import platform
 def get_config_file_path():
     dir_path = os.path.dirname(os.path.realpath(__file__))
     gloomer_path = dir_path.split('src')
-    return os.path.join(gloomer_path[0], 'config.ini')
+    config_file_path = os.path.join(gloomer_path[0], 'config.ini')
+
+    try:
+        assert (os.path.isfile(config_file_path)), 'config.ini file missing!'
+    except Exception as e:
+        print(e)
+        exit()
+    
+    return config_file_path
 
 
 def get_user_root():
