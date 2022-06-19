@@ -6,9 +6,6 @@ from pprint import pprint
 
 import utils
 
-config = configparser.ConfigParser()
-config.read('../../config.ini')
-
 def save(file_path, new_line):
     with open(file_path, 'w') as fp:
         fp.write(new_line)
@@ -19,7 +16,7 @@ def save_append(file_path, new_line):
         fp.write(new_line)
 
 
-def get_log_path():
+def get_log_path(config):
     user_root = utils.get_user_root()
     log_dir = config['atis']['log_directory']
     log_path = f'{user_root}/{log_dir}'
@@ -31,7 +28,10 @@ def get_log_path():
 
 
 if __name__ == '__main__':
-    log_path = get_log_path()
+    config = configparser.ConfigParser()
+    config.read(utils.get_config_file_path())
+    log_path = get_log_path(config)
+
     only_files = [f for f in os.listdir(log_path) if os.path.isfile(os.path.join(log_path, f))]
 
     utc_datetime = utils.get_datetime_name()

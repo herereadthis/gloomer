@@ -44,7 +44,7 @@ def get_last_entry_cell(file_path, cell_name) -> str:
     return df.loc[df.index[-1],cell_name]
 
 
-def get_log_path():
+def get_log_path(config):
     user_root = utils.get_user_root()
     log_dir = config['atis']['log_directory']
     log_path = f'{user_root}/{log_dir}'
@@ -56,7 +56,10 @@ def get_log_path():
 
 
 if __name__ == '__main__':
-    log_path = get_log_path()
+    config = configparser.ConfigParser()
+    config.read(utils.get_config_file_path())
+    log_path = get_log_path(config)
+
     only_files = [f for f in os.listdir(log_path) if os.path.isfile(os.path.join(log_path, f))]
 
     atis_dataframe = process_atis()

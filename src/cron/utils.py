@@ -2,6 +2,13 @@ import os
 import datetime as dt
 from sys import platform
 
+
+def get_config_file_path():
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    gloomer_path = dir_path.split('src')
+    return os.path.join(gloomer_path[0], 'config.ini')
+
+
 def get_user_root():
     supported_platforms = ['linux', 'darwin']
     
