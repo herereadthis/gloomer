@@ -2,21 +2,10 @@ import os
 import json
 import requests
 import pandas as pd
-import datetime as dt
-import configparser
+import toml
 
 import utils
 from parsed_atis import ParsedAtis
-
-config = configparser.ConfigParser()
-config.read('../../config.ini')
-
-AIRPORT_CODE = 'kdca'
-ATIS_ENDPOINT = 'https://datis.clowd.io/api'
-ATIS_URL = f'{ATIS_ENDPOINT}/{AIRPORT_CODE}'
-
-landing_string = 'LNDG'
-departure_string = 'DEPG'
 
 
 def fetch(url: str) -> list:
@@ -32,8 +21,12 @@ def save_append(atis_reports: pd.DataFrame, path: str) -> None:
     atis_reports.to_csv(path, index=False, mode='a', header=False)
 
 
-def process_atis() -> pd.DataFrame:
-    atis_reports = fetch(url=ATIS_URL)
+def process_atis(config) -> pd.DataFrame:
+    endpoint = config['atis']['endpoint']
+    airport_icao = config['atis']['airport_icao']
+    atis_url = f'{endpoint}/{airport_icao}'
+    print(atis_url)
+    atis_reports = fetch(url=atis_url)
     atis_report = ParsedAtis(atis_reports[0])
     parsed_atis = atis_report.get_parsed_atis()
     return pd.DataFrame([parsed_atis])
@@ -56,15 +49,15 @@ def get_log_path(config):
 
 
 if __name__ == '__main__':
-    config = configparser.ConfigParser()
-    config.read(utils.get_config_file_path())
+    config = toml.load(utils.get_config_file_path())
     log_path = get_log_path(config)
+    airport_icao = config['atis']['airport_icao']
 
     only_files = [f for f in os.listdir(log_path) if os.path.isfile(os.path.join(log_path, f))]
 
-    atis_dataframe = process_atis()
+    atis_dataframe = process_atis(config)
 
-    proposed_file_name = f'atis_{AIRPORT_CODE}_{utils.get_daystamp_name()}.csv'
+    proposed_file_name = f'atis_{airport_icao}_{utils.get_daystamp_name()}.csv'
     file_path = os.path.abspath(os.path.join(log_path, proposed_file_name))
     print(f'proposed_file_name: {proposed_file_name}')
 

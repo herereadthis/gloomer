@@ -1,0 +1,13 @@
+# CONFIGURATION
+# Enter the info you need, then save this file as config.toml
+
+[atis]
+# directory where logs will be stored
+# For Linux users, the logs will be at /home/<User>/<atis.log_directory>
+# For Mac users, the logs will be at /Users/<User>/<atis.log_directory>
+log_directory = "gloomer_logs"
+# ICAO code for the airport to retrieve D-ATIS
+# Do not use the more familiar IATA code!
+airport_icao = "kjfk"
+# URL to fetch D-ATIS
+endpoint = "https://datis.clowd.io/api"

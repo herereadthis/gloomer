@@ -1,8 +1,6 @@
 import os
-import datetime as dt
-from sys import platform
-import configparser
 from pprint import pprint
+import toml
 
 import utils
 
@@ -28,8 +26,7 @@ def get_log_path(config):
 
 
 if __name__ == '__main__':
-    config = configparser.ConfigParser()
-    config.read(utils.get_config_file_path())
+    config = toml.load(utils.get_config_file_path())
     log_path = get_log_path(config)
 
     only_files = [f for f in os.listdir(log_path) if os.path.isfile(os.path.join(log_path, f))]
