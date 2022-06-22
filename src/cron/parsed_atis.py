@@ -26,6 +26,18 @@ class ParsedAtis:
         # utc_ts = dt.datetime.utcfromtimestamp(epoch)
         atis_time_formatted = dt.datetime.strptime(str(self.atis_time), '%H%M%z')
         utc_ts = ParsedAtis.round_seconds(dt.datetime.utcnow())
+        # foo_ts = dt.datetime.now(dt.timezone.utc)
+
+        print(f'atis_time_formatted: {atis_time_formatted.isoformat()}')
+        print(f'utc_ts: {utc_ts.isoformat()}')
+        # print(f'foo_ts: {foo_ts.isoformat()}')
+
+        now = dt.datetime.now()
+        local_now = now.astimezone()
+        local_tz = local_now.tzinfo
+        local_tzname = local_tz.tzname(local_now)
+        print(local_tzname)
+
         local_ts = dt.datetime.now()
         atis_datetime = utc_ts.replace(
             hour=atis_time_formatted.hour, 
