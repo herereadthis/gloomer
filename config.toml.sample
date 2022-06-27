@@ -11,3 +11,5 @@ log_directory = "gloomer_logs"
 airport_icao = "kjfk"
 # URL to fetch D-ATIS
 endpoint = "https://datis.clowd.io/api"
+# The timezone of the airport
+timezone = "America/New_York"

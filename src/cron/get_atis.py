@@ -2,6 +2,7 @@ import os
 import json
 import requests
 import pandas as pd
+from pprint import pprint
 import toml
 
 import utils
@@ -22,12 +23,19 @@ def save_append(atis_reports: pd.DataFrame, path: str) -> None:
 
 
 def process_atis(config) -> pd.DataFrame:
-    endpoint = config['atis']['endpoint']
-    airport_icao = config['atis']['airport_icao']
+    atis_config = config['atis']
+    endpoint = atis_config['endpoint']
+    airport_icao = atis_config['airport_icao']
+    timezone = atis_config['timezone']
     atis_url = f'{endpoint}/{airport_icao}'
     atis_reports = fetch(url=atis_url)
-    atis_report = ParsedAtis(atis_reports[0])
+    atis_report = ParsedAtis(atis_reports[0], timezone)
     parsed_atis = atis_report.get_parsed_atis()
+
+    print('\n')
+    pprint(parsed_atis)
+    print('\n')
+
     return pd.DataFrame([parsed_atis])
 
 
