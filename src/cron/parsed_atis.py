@@ -3,7 +3,7 @@ import pandas as pd
 from pprint import pprint
 import datetime as dt
 import time
-
+import pytz
 
 LANDING_STRING = 'LNDG'
 DEPARTURE_STRING = 'DEPG'
@@ -21,37 +21,47 @@ class ParsedAtis:
 
     @property
     def time_values(self):
-        epoch = time.time()
-        # local_ts = dt.datetime.fromtimestamp(epoch)
-        # utc_ts = dt.datetime.utcfromtimestamp(epoch)
-        atis_time_formatted = dt.datetime.strptime(str(self.atis_time), '%H%M%z')
         utc_ts = ParsedAtis.round_seconds(dt.datetime.utcnow())
-        # foo_ts = dt.datetime.now(dt.timezone.utc)
 
-        print(f'atis_time_formatted: {atis_time_formatted.isoformat()}')
-        print(f'utc_ts: {utc_ts.isoformat()}')
-        # print(f'foo_ts: {foo_ts.isoformat()}')
+        atis_time = dt.datetime.strptime(str(self.atis_time), '%H%M%z')
 
-        now = dt.datetime.now()
-        local_now = now.astimezone()
-        local_tz = local_now.tzinfo
-        local_tzname = local_tz.tzname(local_now)
-        print(local_tzname)
+        time_midnight = dt.datetime.strptime('00Z', '%H%z')
 
-        local_ts = dt.datetime.now()
+        time_now = dt.datetime.strptime(f'{utc_ts.hour}-{utc_ts.minute}Z', '%H-%M%z')
+
+        now_midnight_diff = (time_now - time_midnight).total_seconds()
+
+        now_atis_diff = (time_now - atis_time).total_seconds()
+        if (now_atis_diff < 0):
+            now_atis_diff = ((time_now + dt.timedelta(days=1)) - atis_time).total_seconds()
+
+        is_same_day_atis = True if now_midnight_diff > now_atis_diff else False
+
         atis_datetime = utc_ts.replace(
-            hour=atis_time_formatted.hour, 
-            minute=atis_time_formatted.minute, 
+            hour=atis_time.hour, 
+            minute=atis_time.minute, 
             second=0, 
             microsecond=0
         )
+        if (is_same_day_atis == False):
+            atis_datetime -= dt.timedelta(days=1)
+
+        print(f'atis_datetime:          {atis_datetime}')
+        ts = ParsedAtis.get_time_datetime(self.atis_time)
+        print(f'ts:                     {ts}')
+
+
+
+        datetime_now = ParsedAtis.round_seconds(dt.datetime.now())
+        localtime = pytz.timezone('America/New_York')
+        localized_datetime = localtime.localize(datetime_now)
+
+        print('\n')
+
 
         return {
-            'local_ts': str(local_ts),
-            'retrieved_utc': str(utc_ts),
-            'retrieved_epoch': epoch,
-            'atis_utc': str(atis_datetime),
-            'atis_epoch': atis_datetime.timestamp()
+            'retrieved_ts': localized_datetime.strftime('%Y-%m-%dT%H:%M:%S%z'),
+            'atis_ts': f'{ts.strftime("%Y-%m-%dT%H:%M")}Z'
         }
 
     @property
@@ -83,8 +93,8 @@ class ParsedAtis:
             'icao_code': self.icao_code,
             'atis_icao': self.atis_icao,
             'atis_time': self.atis_time,
-            'atis_ts': self.time_values['atis_utc'],
-            'retrieved_ts': self.time_values['retrieved_utc'],
+            'atis_ts': self.time_values['atis_ts'],
+            'retrieved_ts': self.time_values['retrieved_ts'],
             **self.runways,
             'atis': self.sentences
         }
@@ -108,3 +118,39 @@ class ParsedAtis:
         if obj.microsecond >= 500_000:
             obj += dt.timedelta(seconds=1)
         return obj.replace(microsecond=0)
+    
+    @staticmethod
+    def get_timezone_code():
+        now = dt.datetime.utcnow()
+        local_now = now.astimezone()
+        local_tz = local_now.tzinfo
+        return local_tz.tzname(local_now)
+    
+    @staticmethod
+    def get_time_datetime(timestamp):
+        # If the time difference betwen UTC now and UTC midnight is less than
+        # the difference between UTC now the given timestamp, then the timestamp
+        # occurred on the day before UTC now.
+        utc_ts = ParsedAtis.round_seconds(dt.datetime.utcnow())
+        formatted_ts = dt.datetime.strptime(str(timestamp), '%H%M%z')
+        time_midnight = dt.datetime.strptime('00Z', '%H%z')
+        time_now = dt.datetime.strptime(f'{utc_ts.hour}-{utc_ts.minute}Z', '%H-%M%z')
+        now_midnight_diff = (time_now - time_midnight).total_seconds()
+        now_to_ts_diff = (time_now - formatted_ts).total_seconds()
+
+        if (now_to_ts_diff < 0):
+            now_to_ts_diff = ((time_now + dt.timedelta(days=1)) - formatted_ts).total_seconds()
+
+
+        ts_with_datetime = utc_ts.replace(
+            hour=formatted_ts.hour, 
+            minute=formatted_ts.minute, 
+            second=0, 
+            microsecond=0
+        )
+
+        is_same_day_ts = True if now_midnight_diff > now_to_ts_diff else False
+        if (is_same_day_ts == False):
+            ts_with_datetime -= dt.timedelta(days=1)
+        
+        return ts_with_datetime

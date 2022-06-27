@@ -21,6 +21,7 @@
 
 ## Alerts and Pictures
 
+* [1090 Timelapse](https://github.com/wiedehopf/timelapse1090#timelapse1090)
 * Take pictures of the planes that fly by [github.com/IQTLabs/SkyScan](https://github.com/IQTLabs/SkyScan)
 * Send Tar1090 screenshots (Selenium + Chrome) to Twitter when planes fly overhead
   * Article: [How I built a twitterbot to track planes passing overhead](https://www.zdnet.com/article/raspberry-pi-4-how-i-built-a-twitterbot-to-track-planes-passing-overhead/)

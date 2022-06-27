@@ -25,7 +25,6 @@ def process_atis(config) -> pd.DataFrame:
     endpoint = config['atis']['endpoint']
     airport_icao = config['atis']['airport_icao']
     atis_url = f'{endpoint}/{airport_icao}'
-    print(atis_url)
     atis_reports = fetch(url=atis_url)
     atis_report = ParsedAtis(atis_reports[0])
     parsed_atis = atis_report.get_parsed_atis()
