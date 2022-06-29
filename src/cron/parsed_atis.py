@@ -22,9 +22,10 @@ class ParsedAtis:
         ts = ParsedAtis.get_time_datetime(self.atis_time)
         self.atis_ts = f'{ts.strftime("%Y-%m-%dT%H:%M")}Z'
 
+        self.runways = None
+        self.set_runways()
 
-    @property
-    def runways(self):
+    def set_runways(self):
         landing_sentence = next(filter(lambda sentence: LANDING_STRING in sentence, self.sentences), None)
         departure_sentence = next(filter(lambda sentence: DEPARTURE_STRING in sentence, self.sentences), None)
         landing_runways = None if landing_sentence == None else ParsedAtis.get_runway_numbers(landing_sentence)
@@ -39,7 +40,7 @@ class ParsedAtis:
         if (departure_runway_primary != None and len(departure_runways) >= 2):
             departure_runway_secondary = landing_runways[1]
 
-        return {
+        self.runways = {
             'landing_runway_primary': landing_runway_primary,
             'landing_runway_secondary': landing_runway_secondary,
             'departure_runway_primary': departure_runway_primary,
