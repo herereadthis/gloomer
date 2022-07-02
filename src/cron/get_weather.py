@@ -9,6 +9,15 @@ import toml
 import utils
 from parsed_atis import ParsedAtis
 
+def get_tag_value(root, loc):
+    text = root.find(f'.//{loc}').text.strip()
+    if text.isnumeric():
+        result = float(text)
+    else:
+        result = text
+    return result
+
+
 
 def fetch(url: str) -> list:
     response = requests.get(url)
@@ -16,11 +25,18 @@ def fetch(url: str) -> list:
     print('\n')
     root = ET.fromstring(response.content)
     print(root.tag)
-    for child in root:
-        print(child.tag, child.attrib, child.text.strip())
+    # for child in root:
+    #     print(child.tag, child.attrib, child.text.strip())
     
-    for child in root.find('.//image'):
-        print(child.tag, child.attrib)
+    # for child in root.find('.//image'):
+    #     print(child.tag, child.attrib)
+    
+    temp_c = get_tag_value(root, 'temp_c')
+    print(f'temp_c: {temp_c}')
+    relative_humidity = get_tag_value(root, 'relative_humidity')
+    print(f'relative_humidity: {relative_humidity}')
+    weather = get_tag_value(root, 'weather')
+    print(f'weather: {weather}')
 
 
 def save(atis_reports: pd.DataFrame, path: str) -> None:
