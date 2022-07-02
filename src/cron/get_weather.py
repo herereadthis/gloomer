@@ -37,6 +37,7 @@ def fetch(url: str) -> list:
     print(f'relative_humidity: {relative_humidity}')
     weather = get_tag_value(root, 'weather')
     print(f'weather: {weather}')
+    print(root.find('.//observation_time/observation_time_rfc822'))
 
 
 def save(atis_reports: pd.DataFrame, path: str) -> None:
