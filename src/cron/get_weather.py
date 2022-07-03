@@ -31,13 +31,22 @@ def fetch(url: str) -> list:
     # for child in root.find('.//image'):
     #     print(child.tag, child.attrib)
     
+    observation_time_rfc822 = get_tag_value(root, 'observation_time_rfc822')
+    print(f'observation_time_rfc822: {observation_time_rfc822}')
     temp_c = get_tag_value(root, 'temp_c')
     print(f'temp_c: {temp_c}')
     relative_humidity = get_tag_value(root, 'relative_humidity')
     print(f'relative_humidity: {relative_humidity}')
     weather = get_tag_value(root, 'weather')
     print(f'weather: {weather}')
-    print(root.find('.//observation_time/observation_time_rfc822'))
+    wind_degrees = get_tag_value(root, 'wind_degrees')
+    print(f'weather: {wind_degrees}')
+    wind_kt = get_tag_value(root, 'wind_kt')
+    print(f'weather: {wind_kt}')
+    wind_mph = get_tag_value(root, 'wind_mph')
+    print(f'weather: {wind_mph}')
+    pressure_mb = get_tag_value(root, 'pressure_mb')
+    print(f'weather: {pressure_mb}')
 
 
 def save(atis_reports: pd.DataFrame, path: str) -> None:
