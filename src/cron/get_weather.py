@@ -5,16 +5,19 @@ import requests
 import pandas as pd
 from pprint import pprint
 import toml
+import re
+import datetime as dt
 
 import utils
 from parsed_atis import ParsedAtis
 
 def get_tag_value(root, loc):
     text = root.find(f'.//{loc}').text.strip()
-    if text.isnumeric():
-        result = float(text)
-    else:
+    regex = '^-?([0]{1}\.{1}[0-9]+|[1-9]{1}[0-9]*\.{1}[0-9]+|[0-9]+|0)$'
+    if re.match(regex, text) == None:
         result = text
+    else:
+        result = float(text)
     return result
 
 
@@ -31,22 +34,25 @@ def fetch(url: str) -> list:
     # for child in root.find('.//image'):
     #     print(child.tag, child.attrib)
     
-    observation_time_rfc822 = get_tag_value(root, 'observation_time_rfc822')
-    print(f'observation_time_rfc822: {observation_time_rfc822}')
-    temp_c = get_tag_value(root, 'temp_c')
-    print(f'temp_c: {temp_c}')
-    relative_humidity = get_tag_value(root, 'relative_humidity')
-    print(f'relative_humidity: {relative_humidity}')
-    weather = get_tag_value(root, 'weather')
-    print(f'weather: {weather}')
-    wind_degrees = get_tag_value(root, 'wind_degrees')
-    print(f'weather: {wind_degrees}')
-    wind_kt = get_tag_value(root, 'wind_kt')
-    print(f'weather: {wind_kt}')
-    wind_mph = get_tag_value(root, 'wind_mph')
-    print(f'weather: {wind_mph}')
-    pressure_mb = get_tag_value(root, 'pressure_mb')
-    print(f'weather: {pressure_mb}')
+
+    weather_report = {
+        'observation_time_rfc822': get_tag_value(root, 'observation_time_rfc822'),
+        'weather': get_tag_value(root, 'weather'),
+        'temp_f': get_tag_value(root, 'temp_f'),
+        'temp_c': get_tag_value(root, 'temp_c'),
+        'relative_humidity': get_tag_value(root, 'relative_humidity'),
+        'wind_dir': get_tag_value(root, 'wind_dir'),
+        'wind_degrees': get_tag_value(root, 'wind_degrees'),
+        'wind_mph': get_tag_value(root, 'wind_mph'),
+        'wind_kt': get_tag_value(root, 'wind_kt'),
+        'pressure_mb': get_tag_value(root, 'pressure_mb'),
+        'pressure_in': get_tag_value(root, 'pressure_in'),
+        'dewpoint_f': get_tag_value(root, 'dewpoint_f'),
+        'dewpoint_c': get_tag_value(root, 'dewpoint_c'),
+        'visibility_mi': get_tag_value(root, 'visibility_mi'),
+        'pressure_in': get_tag_value(root, 'pressure_in')
+    }
+    pprint(weather_report)
 
 
 def save(atis_reports: pd.DataFrame, path: str) -> None:
