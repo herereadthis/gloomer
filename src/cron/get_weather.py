@@ -11,31 +11,17 @@ from parsed_atis import ParsedAtis
 from parsed_weather import ParsedWeather
 
 
-def save(atis_reports: pd.DataFrame, path: str) -> None:
-    atis_reports.to_csv(path, index=False)
+def save(reports: pd.DataFrame, path: str) -> None:
+    reports.to_csv(path, index=False)
 
 
-def save_append(atis_reports: pd.DataFrame, path: str) -> None:
-    atis_reports.to_csv(path, index=False, mode='a', header=False)
+def save_append(reports: pd.DataFrame, path: str) -> None:
+    reports.to_csv(path, index=False, mode='a', header=False)
 
 
-def process_atis(config) -> pd.DataFrame:
-    atis_config = config['atis']
-    endpoint = atis_config['endpoint']
-    airport_icao = atis_config['airport_icao']
-    timezone = atis_config['timezone']
-    atis_url = f'{endpoint}/{airport_icao}'
-    atis_reports = fetch(url=atis_url)
-    atis_report = ParsedAtis(atis_reports[0], timezone)
-    parsed_atis = atis_report.get_parsed_atis()
-
-    print('\n')
-    pprint(parsed_atis)
-    print('\n')
-
-    return pd.DataFrame([parsed_atis])
-
-
+def process_weather(parsed_weather) -> pd.DataFrame:
+    pprint(parsed_weather)
+    return pd.DataFrame([parsed_weather])
 
 
 def get_last_entry_cell(file_path, cell_name) -> str:
@@ -62,26 +48,22 @@ if __name__ == '__main__':
 
     only_files = [f for f in os.listdir(log_path) if os.path.isfile(os.path.join(log_path, f))]
 
-    parsedWeather = ParsedWeather(airport_icao, airport_timezone)
+    parsed_weather = ParsedWeather(airport_icao, airport_timezone)
+    weather_dataframe = process_weather(parsed_weather.weather_report)
 
-    pprint(parsedWeather.weather_report)
+    proposed_file_name = f'weather_{airport_icao}_{utils.get_daystamp_name()}.csv'
+    file_path = os.path.abspath(os.path.join(log_path, proposed_file_name))
+    print(proposed_file_name)
+    print(file_path)
 
-    
-
-    # atis_dataframe = process_atis(config)
-
-    # proposed_file_name = f'atis_{airport_icao}_{utils.get_daystamp_name()}.csv'
-    # file_path = os.path.abspath(os.path.join(log_path, proposed_file_name))
-    # print(f'proposed_file_name: {proposed_file_name}')
-
-    # if (proposed_file_name in only_files):
-    #     last_icao = get_last_entry_cell(file_path, 'atis_icao')
-    #     current_icao = atis_dataframe.loc[0, 'atis_icao']
-    #     if (last_icao == current_icao):
-    #         print('last atis already recorded!')
-    #     else:
-    #         print('adding new atis to existing file!')
-    #         save_append(atis_reports=atis_dataframe, path=file_path)
-    # else:
-    #     print(f'new_file_path: {file_path}')
-    #     save(atis_reports=atis_dataframe, path=file_path)
+    if (proposed_file_name in only_files):
+        last_observation_ts = get_last_entry_cell(file_path, 'observation_ts')
+        current_observation_ts = weather_dataframe.loc[0, 'observation_ts']
+        if (last_observation_ts == current_observation_ts):
+            print('last report already recorded!')
+        else:
+            print('adding new report to existing file!')
+            save_append(reports=weather_dataframe, path=file_path)
+    else:
+        print(f'new_file_path: {file_path}')
+        save(reports=weather_dataframe, path=file_path)
