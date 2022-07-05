@@ -3,12 +3,10 @@ import xml.etree.ElementTree as ET
 import pandas as pd
 from pprint import pprint
 import toml
-import re
-import datetime as dt
 
 import utils
-from parsed_atis import ParsedAtis
 from parsed_weather import ParsedWeather
+from data_file import DataFile
 
 
 def save(reports: pd.DataFrame, path: str) -> None:
@@ -45,6 +43,8 @@ if __name__ == '__main__':
     log_path = get_log_path(config)
     airport_icao = config['weather']['airport_icao']
     airport_timezone = config['weather']['timezone']
+
+    data_file = DataFile()
 
     only_files = [f for f in os.listdir(log_path) if os.path.isfile(os.path.join(log_path, f))]
 
