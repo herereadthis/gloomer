@@ -43,13 +43,21 @@ if __name__ == '__main__':
     log_path = get_log_path(config)
     airport_icao = config['weather']['airport_icao']
     airport_timezone = config['weather']['timezone']
+    base_file_name = f'weather_{airport_icao}'
 
-    data_file = DataFile()
-
-    only_files = [f for f in os.listdir(log_path) if os.path.isfile(os.path.join(log_path, f))]
 
     parsed_weather = ParsedWeather(airport_icao, airport_timezone)
     weather_dataframe = process_weather(parsed_weather.weather_report)
+
+    data_file = DataFile(
+        log_path = get_log_path(config),
+        base_file_name = f'weather_{airport_icao}',
+        report = parsed_weather.weather_report
+    )
+    print(data_file)
+
+    only_files = [f for f in os.listdir(log_path) if os.path.isfile(os.path.join(log_path, f))]
+
 
     proposed_file_name = f'weather_{airport_icao}_{utils.get_daystamp_name()}.csv'
     file_path = os.path.abspath(os.path.join(log_path, proposed_file_name))
