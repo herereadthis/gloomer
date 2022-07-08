@@ -13,3 +13,9 @@ airport_icao = "kjfk"
 endpoint = "https://datis.clowd.io/api"
 # The timezone of the airport
 timezone = "America/New_York"
+
+# spot planes flying overhead
+[spotter]
+latitude = 19.86473
+longitude = -155.11242
+radius = 750
