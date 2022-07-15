@@ -27,6 +27,7 @@
   * Article: [How I built a twitterbot to track planes passing overhead](https://www.zdnet.com/article/raspberry-pi-4-how-i-built-a-twitterbot-to-track-planes-passing-overhead/)
   * Repository: [shbisson/OverPutney](https://github.com/shbisson/OverPutney)
 * Notify when Particular planes are taking off or landing: [Jxck-S/plane-notify](https://github.com/Jxck-S/plane-notify)
+* Rest API to look up airplane ICAO hex https://api.joshdouch.me/
 
 
 
