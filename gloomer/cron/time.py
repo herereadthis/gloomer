@@ -2,7 +2,7 @@ import os
 from pprint import pprint
 import toml
 
-import utils
+from gloomer.utils import utils
 
 def save(file_path, new_line):
     with open(file_path, 'w') as fp:

@@ -1,6 +1,7 @@
 import os
 import json
 import requests
+from pprint import pprint
 
 from yum import utils
 
@@ -16,5 +17,9 @@ if __name__ == '__main__':
 
     json_dump = os.path.join(ROOT_DIR, 'tmp', '1657290545.json')
     print(json_dump)
+    print(json_dump)
+    f = open(json_dump)
 
-    aircraft_json = fetch(url=json_dump)
+    # aircraft_json = fetch(url=json_dump)
+    aircraft_json = json.load(f)
+    pprint(aircraft_json)
