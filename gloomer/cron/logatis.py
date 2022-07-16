@@ -4,9 +4,11 @@ import requests
 from pprint import pprint
 import toml
 
-import utils
-from parsed_atis import ParsedAtis
-from data_file import DataFile
+
+
+from utils import utils
+from cron.parsed_atis import ParsedAtis
+from cron.data_file import DataFile
 
 
 def fetch(url: str) -> list:
@@ -25,7 +27,7 @@ def get_log_path(config):
     return log_path
 
 
-if __name__ == '__main__':
+def main():
     config = toml.load(utils.get_config_file_path())
     atis_config = config['atis']
     airport_icao = atis_config['airport_icao']
@@ -45,3 +47,7 @@ if __name__ == '__main__':
         unique_key = 'atis_icao'
     )
     data_file.save_data()
+
+
+if __name__ == '__main__':
+    main()

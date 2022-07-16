@@ -3,11 +3,17 @@ import datetime as dt
 from sys import platform
 import toml
 
+from utils.definitions import ROOT_DIR
+
 
 def get_config_file_path():
-    dir_path = os.path.dirname(os.path.realpath(__file__))
-    gloomer_path = dir_path.split('src')
-    config_file_path = os.path.join(gloomer_path[0], 'config.toml')
+    # dir_path = os.path.dirname(os.path.realpath(__file__))
+    # gloomer_path = dir_path.split('src')
+    # config_file_path = os.path.join(gloomer_path[0], 'config.toml')
+    config_file_path = os.path.join(ROOT_DIR, 'config.toml')
+
+    print('config_file_path')
+    print(config_file_path)
 
     try:
         assert (os.path.isfile(config_file_path)), 'config.toml file missing!'

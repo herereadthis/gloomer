@@ -2,7 +2,8 @@ import os
 from pprint import pprint
 import toml
 
-from gloomer.utils import utils
+from utils import utils 
+
 
 def save(file_path, new_line):
     with open(file_path, 'w') as fp:
@@ -24,9 +25,9 @@ def get_log_path(config):
     
     return log_path
 
-
-if __name__ == '__main__':
+def main():
     config = toml.load(utils.get_config_file_path())
+
     log_path = get_log_path(config)
 
     only_files = [f for f in os.listdir(log_path) if os.path.isfile(os.path.join(log_path, f))]
@@ -46,3 +47,7 @@ if __name__ == '__main__':
         print(f'new_file_path: {file_path}')
         print(new_line)
         save(file_path, new_line)
+
+
+if __name__ == '__main__':
+    main()

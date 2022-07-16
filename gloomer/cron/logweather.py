@@ -1,9 +1,9 @@
 import os
 import toml
 
-import utils
-from parsed_weather import ParsedWeather
-from data_file import DataFile
+from utils import utils
+from cron.parsed_weather import ParsedWeather
+from cron.data_file import DataFile
 
 
 def get_log_path(config):
@@ -16,8 +16,7 @@ def get_log_path(config):
     
     return log_path
 
-
-if __name__ == '__main__':
+def main():
     config = toml.load(utils.get_config_file_path())
     airport_icao = config['weather']['airport_icao']
     airport_timezone = config['weather']['timezone']
@@ -32,3 +31,7 @@ if __name__ == '__main__':
     )
     print(data_file)
     data_file.save_data()
+
+
+if __name__ == '__main__':
+    main()
