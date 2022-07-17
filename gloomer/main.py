@@ -26,7 +26,12 @@ def main():
 
     # aircraft_json = fetch(url=json_dump)
     aircraft_json = json.load(f)
-    # pprint(aircraft_json)
+    aircraft = aircraft_json['aircraft']
+    pprint(aircraft)
+    print(len(aircraft))
+
+    for plane in aircraft:
+
 
 
 if __name__ == '__main__':
