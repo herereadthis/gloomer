@@ -27,10 +27,39 @@ def main():
     # aircraft_json = fetch(url=json_dump)
     aircraft_json = json.load(f)
     aircraft = aircraft_json['aircraft']
-    pprint(aircraft)
-    print(len(aircraft))
 
     for plane in aircraft:
+        # pprint(plane)
+        hex = plane['hex']
+        flight = None if 'flight' not in plane else plane['flight']
+        latitude = None if 'lat' not in plane else plane['lat']
+        longitude = None if 'lon' not in plane else plane['lon']
+        track = None if 'track' not in plane else plane['track']
+        altitude = None if 'altitude' not in plane else plane['altitude']
+        speed = None if 'speed' not in plane else plane['speed']
+
+        plane_info = {
+            'hex': hex
+        }
+        if (flight):
+            plane_info['flight'] = flight
+        if (latitude):
+            plane_info['latitude'] = latitude
+        if (longitude):
+            plane_info['longitude'] = longitude
+        if (track):
+            plane_info['track'] = track
+        if (altitude):
+            plane_info['altitude'] = altitude
+        if (speed):
+            plane_info['speed'] = speed
+        
+        pprint(plane_info)
+
+        # print(plane['track'])
+        # print(plane['lat'])
+        # print(plane['lon'])
+        # print(plane['altitude'])
 
 
 
