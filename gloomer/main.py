@@ -54,13 +54,56 @@ def main():
         if (speed):
             plane_info['speed'] = speed
         
-        pprint(plane_info)
 
         # print(plane['track'])
         # print(plane['lat'])
         # print(plane['lon'])
         # print(plane['altitude'])
+    
+    def filter_function(plane):
+        return False if 'lat' not in plane else True
 
+    def map_function(plane):
+        hex = plane['hex']
+        flight = None if 'flight' not in plane else plane['flight']
+        latitude = None if 'lat' not in plane else plane['lat']
+        longitude = None if 'lon' not in plane else plane['lon']
+        track = None if 'track' not in plane else plane['track']
+        altitude = None if 'altitude' not in plane else plane['altitude']
+        speed = None if 'speed' not in plane else plane['speed']
+
+        plane_info = {
+            'hex': hex
+        }
+        if (flight):
+            plane_info['flight'] = flight
+        if (latitude):
+            plane_info['latitude'] = latitude
+        if (longitude):
+            plane_info['longitude'] = longitude
+        if (track):
+            plane_info['track'] = track
+        if (altitude):
+            plane_info['altitude'] = altitude
+        if (speed):
+            plane_info['speed'] = speed
+
+        print(plane_info)
+        
+        return plane_info
+    
+    def mf(plane):
+        hex = plane['hex']
+        return hex
+
+    
+
+    aircraft_with_data = list(filter(filter_function, aircraft))
+    pprint(aircraft_with_data)
+    formatted_aircraft = list(map(map_function, aircraft_with_data))
+
+
+    pprint(formatted_aircraft)
 
 
 if __name__ == '__main__':
