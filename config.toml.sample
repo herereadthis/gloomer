@@ -18,4 +18,5 @@ timezone = "America/New_York"
 [spotter]
 latitude = 19.86473
 longitude = -155.11242
+altitude = 20
 radius = 750
