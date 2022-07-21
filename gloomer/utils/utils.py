@@ -12,9 +12,6 @@ def get_config_file_path():
     # config_file_path = os.path.join(gloomer_path[0], 'config.toml')
     config_file_path = os.path.join(ROOT_DIR, 'config.toml')
 
-    print('config_file_path')
-    print(config_file_path)
-
     try:
         assert (os.path.isfile(config_file_path)), 'config.toml file missing!'
     except Exception as e:

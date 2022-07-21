@@ -22,19 +22,12 @@ def fetch(url: str) -> list:
     res = requests.get(url)
     return json.loads(res.content)
 
-
     
 def filter_function(plane):
     return False if 'lat' not in plane else True
 
+
 def map_function(config):
-    print('aslkdjfhlaskdjfh')
-    print('aslkdjfhlaskdjfh')
-    print('aslkdjfhlaskdjfh')
-    print('aslkdjfhlaskdjfh')
-    pprint(config)
-
-
     base_latitude = config['latitude']
     base_longitude = config['longitude']
     radius = config['radius']
@@ -64,8 +57,6 @@ def map_function(config):
         if (speed):
             plane_info['speed'] = speed
 
-        print(plane_info)
-
         if ('latitude' in plane_info and 'longitude' in plane_info):
             geo = geod.Inverse(base_latitude, base_longitude, plane_info['latitude'], plane_info['longitude'])
 
@@ -89,45 +80,31 @@ def leftFn(foo):
 def main():
     config = toml.load(utils.get_config_file_path())
     adsb_config = config['adsb']
-    base_latitude = adsb_config['latitude']
-    base_longitude = adsb_config['longitude']
-    radius = adsb_config['radius']
 
     # json_dump = os.path.join(ROOT_DIR, 'tmp', '1657319464.json')
     json_dump = os.path.join(ROOT_DIR, 'tmp', '1657322477.json')
     # json_dump = os.path.join(ROOT_DIR, 'tmp', '1657292525.json')
-    print(json_dump)
+    # print(json_dump)
     f = open(json_dump)
 
-    # aircraft_json = fetch(url=json_dump)
     aircraft_json = json.load(f)
     aircraft = aircraft_json['aircraft']
 
-    aircraft_with_data = list(filter(filter_function, aircraft))
-    # pprint(aircraft_with_data)
+    aircraft_with_data = list(filter(lambda plane: False if 'lat' not in plane else True, aircraft))
     formatted_aircraft = list(map(map_function(adsb_config), aircraft_with_data))
+    relevant_aircraft = list(filter(lambda plane: True if 'geo' in plane else False, formatted_aircraft))
 
 
+    for plane in relevant_aircraft:
+        distance_meters = plane['geo']['s12']
 
-    # pprint(formatted_aircraft)
-
-
-
-    for plane in formatted_aircraft:
-        if ('geo' in plane):
-            distance_meters = plane['geo']['s12']
-
-            if (distance_meters < radius):
-                print('\n')
-                print(plane)
-                print("The distance is {:.3f} m.".format(distance_meters))
-
-
+        print('\n')
+        pprint(plane)
+        print("The distance is {:.3f} m.".format(distance_meters))
 
 
 if __name__ == '__main__':
-    print('hello world')
-    print(sys.argv)
+    # print(sys.argv)
 
     try:
         sys.argv[1]
