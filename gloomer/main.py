@@ -64,6 +64,7 @@ def map_function(config):
 
             if (distance_meters < radius):
                 plane_info['geo']  = geo
+                plane_info['distance_meters'] = distance_meters
         
         return plane_info
     return mapper
@@ -76,26 +77,27 @@ def leftFn(foo):
 
 # leftFn('foo')('bar')
 
+def filter_format_aircraft(aircraft, adsb_config):
+    aircraft_with_data = list(filter(lambda plane: False if 'lat' not in plane else True, aircraft))
+    formatted_aircraft = list(map(map_function(adsb_config), aircraft_with_data))
+    return list(filter(lambda plane: True if 'geo' in plane else False, formatted_aircraft))
+
 
 def main():
+    print('Running aircraft locater.')
     config = toml.load(utils.get_config_file_path())
     adsb_config = config['adsb']
 
-    # json_dump = os.path.join(ROOT_DIR, 'tmp', '1657319464.json')
-    json_dump = os.path.join(ROOT_DIR, 'tmp', '1657322477.json')
-    # json_dump = os.path.join(ROOT_DIR, 'tmp', '1657292525.json')
-    # print(json_dump)
+    json_dump = os.path.join(ROOT_DIR, 'tmp', '1657292399.json')
     f = open(json_dump)
 
     aircraft_json = json.load(f)
     aircraft = aircraft_json['aircraft']
+    selected_aircraft = filter_format_aircraft(aircraft, adsb_config)
 
-    aircraft_with_data = list(filter(lambda plane: False if 'lat' not in plane else True, aircraft))
-    formatted_aircraft = list(map(map_function(adsb_config), aircraft_with_data))
-    relevant_aircraft = list(filter(lambda plane: True if 'geo' in plane else False, formatted_aircraft))
+    print(f'{len(selected_aircraft)} nearby aircraft found.')
 
-
-    for plane in relevant_aircraft:
+    for plane in filter_format_aircraft(aircraft, adsb_config):
         distance_meters = plane['geo']['s12']
 
         print('\n')
@@ -104,17 +106,20 @@ def main():
 
 
 if __name__ == '__main__':
-    # print(sys.argv)
+    def runMain():
+        return main()
+    
+    def runScripts(argv):
+        if (argv == 'logtime'):
+            return logtime.main()
+        elif (argv == 'logweather'):
+            return logweather.main()
+        elif (argv == 'logatis'):
+            return logatis.main()
 
     try:
         sys.argv[1]
     except IndexError:
-        print("well, it WASN'T defined after all!")
-        main()
+        runMain()
     else:
-        if (sys.argv[1] == 'logtime'):
-            logtime.main()
-        elif (sys.argv[1] == 'logweather'):
-            logweather.main()
-        elif (sys.argv[1] == 'logatis'):
-            logatis.main()
+        runScripts(sys.argv[1])
