@@ -1,19 +1,10 @@
 import os
-import json
-import requests
 from pprint import pprint
 import toml
-
-
 
 from utils import utils
 from cron.parsed_atis import ParsedAtis
 from cron.data_file import DataFile
-
-
-def fetch(url: str) -> list:
-    res = requests.get(url)
-    return json.loads(res.content)
 
 
 def get_log_path(config):
@@ -28,11 +19,11 @@ def get_log_path(config):
 
 
 def main():
-    config = toml.load(utils.get_config_file_path())
+    config = utils.get_config()
     atis_config = config['atis']
     airport_icao = atis_config['airport_icao']
     atis_url = atis_config['endpoint'] + '/' + airport_icao
-    atis_reports = fetch(url=atis_url)
+    atis_reports = utils.fetch_json(url=atis_url)
     atis_report = ParsedAtis(atis_reports[0], atis_config['timezone'])
     parsed_atis = atis_report.get_parsed_atis()
 

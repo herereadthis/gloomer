@@ -26,7 +26,7 @@ def get_log_path(config):
     return log_path
 
 def main():
-    config = toml.load(utils.get_config_file_path())
+    config = utils.get_config()
 
     log_path = get_log_path(config)
 

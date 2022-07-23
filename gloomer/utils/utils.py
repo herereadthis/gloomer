@@ -1,9 +1,20 @@
 import os
 import datetime as dt
 from sys import platform
+import requests
+import json
 import toml
 
 from utils.definitions import ROOT_DIR
+
+def fetch_json(url: str) -> list:
+    res = requests.get(url)
+    return json.loads(res.content)
+
+
+def open_json(json_path):
+    f = open(json_path)
+    return json.load(f)
 
 
 def get_config_file_path():
@@ -19,6 +30,18 @@ def get_config_file_path():
         exit()
     
     return config_file_path
+
+
+def get_config():
+    config_file_path = os.path.join(ROOT_DIR, 'config.toml')
+
+    try:
+        assert (os.path.isfile(config_file_path)), 'config.toml file missing!'
+    except Exception as e:
+        print(e)
+        exit()
+    
+    return toml.load(config_file_path)
 
 
 def get_user_root():

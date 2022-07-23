@@ -1,9 +1,6 @@
 import os
-import json
-import requests
 from pprint import pprint
 import sys
-import toml
 from geographiclib.geodesic import Geodesic
 import math
 geod = Geodesic.WGS84
@@ -16,15 +13,6 @@ from cron import logtime, logweather, logatis
 # import definitions
 
 from utils import utils
-
-
-def fetch(url: str) -> list:
-    res = requests.get(url)
-    return json.loads(res.content)
-
-    
-def filter_function(plane):
-    return False if 'lat' not in plane else True
 
 
 def map_function(config):
@@ -85,13 +73,11 @@ def filter_format_aircraft(aircraft, adsb_config):
 
 def main():
     print('Running aircraft locater.')
-    config = toml.load(utils.get_config_file_path())
+    config = utils.get_config()
     adsb_config = config['adsb']
 
-    json_dump = os.path.join(ROOT_DIR, 'tmp', '1657292399.json')
-    f = open(json_dump)
-
-    aircraft_json = json.load(f)
+    json_path = os.path.join(ROOT_DIR, 'tmp', '1657292399.json')
+    aircraft_json = utils.open_json(json_path)
     aircraft = aircraft_json['aircraft']
     selected_aircraft = filter_format_aircraft(aircraft, adsb_config)
 
