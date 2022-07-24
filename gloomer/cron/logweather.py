@@ -1,5 +1,4 @@
 import os
-import toml
 
 from utils import utils
 from cron.parsed_weather import ParsedWeather

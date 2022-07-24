@@ -1,6 +1,5 @@
 import os
 from pprint import pprint
-import toml
 
 from utils import utils
 from cron.parsed_atis import ParsedAtis

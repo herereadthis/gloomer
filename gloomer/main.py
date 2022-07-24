@@ -5,8 +5,6 @@ from geographiclib.geodesic import Geodesic
 import math
 geod = Geodesic.WGS84
 
-# from yum import utils
-
 from utils import utils
 from utils.definitions import ROOT_DIR
 from cron import logtime, logweather, logatis
