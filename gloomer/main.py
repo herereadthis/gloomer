@@ -1,19 +1,20 @@
+"""
+Main file.
+"""
 import os
 from pprint import pprint
 import sys
-from geographiclib.geodesic import Geodesic
-import math
-geod = Geodesic.WGS84
-
+from cron import logtime, logweather, logatis
 from utils import utils
 from utils.definitions import ROOT_DIR
-from cron import logtime, logweather, logatis
+from geographiclib.geodesic import Geodesic
+# import math
+geod = Geodesic.WGS84
 # import definitions
-
-from utils import utils
 
 
 def map_function(config):
+    """ mapping function which parses aircraft info """
     base_latitude = config['latitude']
     base_longitude = config['longitude']
     radius = config['radius']
