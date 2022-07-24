@@ -7,6 +7,9 @@ import toml
 
 from utils.definitions import ROOT_DIR
 
+def noop():
+    pass
+
 def fetch_json(url: str) -> list:
     res = requests.get(url)
     return json.loads(res.content)

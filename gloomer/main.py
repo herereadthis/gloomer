@@ -20,7 +20,6 @@ def map_function(config):
     radius = config['radius']
 
     def mapper(plane):
-        hex = plane['hex']
         flight = None if 'flight' not in plane else plane['flight']
         latitude = None if 'lat' not in plane else plane['lat']
         longitude = None if 'lon' not in plane else plane['lon']
@@ -29,53 +28,59 @@ def map_function(config):
         speed = None if 'speed' not in plane else plane['speed']
 
         plane_info = {
-            'hex': hex
+            'hex': plane['hex']
         }
-        if (flight):
+        if flight:
             plane_info['flight'] = flight
-        if (latitude):
+        if latitude:
             plane_info['latitude'] = latitude
-        if (longitude):
+        if longitude:
             plane_info['longitude'] = longitude
-        if (track):
+        if track:
             plane_info['track'] = track
-        if (altitude):
+        if altitude:
             plane_info['altitude'] = altitude
-        if (speed):
+        if speed:
             plane_info['speed'] = speed
 
         if ('latitude' in plane_info and 'longitude' in plane_info):
-            geo = geod.Inverse(base_latitude, base_longitude, plane_info['latitude'], plane_info['longitude'])
+            geo = geod.Inverse(
+                base_latitude, base_longitude, plane_info['latitude'],
+                plane_info['longitude']
+            )
 
             distance_meters = geo['s12']
 
-            if (distance_meters < radius):
+            if distance_meters < radius:
                 plane_info['geo']  = geo
                 plane_info['distance_meters'] = distance_meters
-        
+
         return plane_info
     return mapper
 
 
-def leftFn(foo):
-    def rightFn(bar):
-        print(f'{foo}, {bar}') 
-    return rightFn
+def left_fn(left_param):
+    """ demo of function that returns a function """
+    def right_fn(right_param):
+        print(f'{left_param}, {right_param}')
+    return right_fn
 
-# leftFn('foo')('bar')
+# left_fn('foo')('bar')
 
 def filter_format_aircraft(aircraft, adsb_config):
-    aircraft_with_data = list(filter(lambda plane: False if 'lat' not in plane else True, aircraft))
+    """ formats and filters aircraft data based on configs """
+    aircraft_with_data = list(filter(lambda plane: 'lat' in plane, aircraft))
     formatted_aircraft = list(map(map_function(adsb_config), aircraft_with_data))
-    return list(filter(lambda plane: True if 'geo' in plane else False, formatted_aircraft))
+    return list(filter(lambda plane: 'geo' in plane, formatted_aircraft))
 
 
 def main():
+    """ main script """
     print('Running aircraft locater.')
     config = utils.get_config()
     adsb_config = config['adsb']
 
-    json_path = os.path.join(ROOT_DIR, 'tmp', '1657292399.json')
+    json_path = os.path.join(ROOT_DIR, 'tmp', '1658686085.json')
     aircraft_json = utils.open_json(json_path)
     aircraft = aircraft_json['aircraft']
     selected_aircraft = filter_format_aircraft(aircraft, adsb_config)
@@ -87,24 +92,30 @@ def main():
 
         print('\n')
         pprint(plane)
-        print("The distance is {:.3f} m.".format(distance_meters))
+        print(f'The distance is {distance_meters:.3f} m')
 
 
 if __name__ == '__main__':
-    def runMain():
+    def run_main():
+        """ main script """
         return main()
-    
-    def runScripts(argv):
-        if (argv == 'logtime'):
-            return logtime.main()
-        elif (argv == 'logweather'):
-            return logweather.main()
-        elif (argv == 'logatis'):
-            return logatis.main()
+
+    def run_scripts(argv):
+        """ other scripts """
+        script = utils.noop
+
+        if argv == 'logtime':
+            script = logtime.main
+        elif argv == 'logweather':
+            script = logweather.main
+        elif argv == 'logatis':
+            script = logatis.main
+
+        script()
 
     try:
         sys.argv[1]
     except IndexError:
-        runMain()
+        run_main()
     else:
-        runScripts(sys.argv[1])
+        run_scripts(sys.argv[1])
