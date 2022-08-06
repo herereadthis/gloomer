@@ -4,10 +4,10 @@ Main file.
 import os
 from pprint import pprint
 import sys
+from geographiclib.geodesic import Geodesic
 from cron import logtime, logweather, logatis
 from utils import utils
 from utils.definitions import ROOT_DIR
-from geographiclib.geodesic import Geodesic
 # import math
 geod = Geodesic.WGS84
 # import definitions
@@ -58,14 +58,6 @@ def map_function(config):
         return plane_info
     return mapper
 
-
-def left_fn(left_param):
-    """ demo of function that returns a function """
-    def right_fn(right_param):
-        print(f'{left_param}, {right_param}')
-    return right_fn
-
-# left_fn('foo')('bar')
 
 def filter_format_aircraft(aircraft, adsb_config):
     """ formats and filters aircraft data based on configs """

@@ -1,3 +1,7 @@
+"""
+Script for logging D-ATIS for one airport
+"""
+
 import os
 from pprint import pprint
 
@@ -7,17 +11,19 @@ from cron.data_file import DataFile
 
 
 def get_log_path(config):
+    """ Get the path of the file to log data """
     user_root = utils.get_user_root()
     log_dir = config['atis']['log_directory']
     log_path = f'{user_root}/{log_dir}'
 
-    if (os.path.exists(log_path) == False):
+    if os.path.exists(log_path) is False:
         os.makedirs(log_path)
-    
+
     return log_path
 
 
 def main():
+    """ main function """
     config = utils.get_config()
     atis_config = config['atis']
     airport_icao = atis_config['airport_icao']
@@ -29,7 +35,7 @@ def main():
     print('\n')
     pprint(parsed_atis)
     print('\n')
-    
+
     data_file = DataFile(
         log_path = get_log_path(config),
         base_file_name = f'atis_{airport_icao}',

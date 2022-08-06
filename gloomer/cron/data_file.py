@@ -1,3 +1,6 @@
+"""
+DataFile class for saving data to CSV
+"""
 import os
 import pandas as pd
 
@@ -11,29 +14,29 @@ class DataFile:
         self.file_path = os.path.abspath(os.path.join(self.log_path, self.proposed_file_name))
         self.report_dataframe = pd.DataFrame([report])
         self.unique_key = unique_key
-    
+
     def __str__(self):
-        s = {
+        obj = {
             'log_path': self.log_path,
             'proposed_file_name': self.proposed_file_name,
             'file_path': self.file_path,
             'report_dataframe': self.report_dataframe,
             'unique_key': self.unique_key
         }
-        return str(s)
+        return str(obj)
 
 
     def get_last_entry_cell(self) -> str:
-        df = pd.read_csv(self.file_path)
-        return df.loc[df.index[-1], self.unique_key]
-    
+        data_file = pd.read_csv(self.file_path)
+        return data_file.loc[data_file.index[-1], self.unique_key]
+
     def save_data(self):
         only_files = [f for f in os.listdir(self.log_path) if os.path.isfile(os.path.join(self.log_path, f))]
 
-        if (self.proposed_file_name in only_files):
+        if self.proposed_file_name in only_files:
             last_observation_key = self.get_last_entry_cell()
             current_observation_key = self.report_dataframe.loc[0, self.unique_key]
-            if (last_observation_key == current_observation_key):
+            if last_observation_key == current_observation_key:
                 print('last report already recorded!')
             else:
                 print('adding new report to existing file!')
