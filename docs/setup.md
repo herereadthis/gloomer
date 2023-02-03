@@ -23,6 +23,13 @@ sudo apt install dump1090-fa lighttpd piaware
 # check piaware at http://my_ip:8080/
 ```
 
+### Install GUI
+
+* use Tar1090 from @wiedhopf here: https://github.com/wiedehopf/tar1090
+  ```
+  sudo bash -c "$(wget -nv -O - https://github.com/wiedehopf/tar1090/raw/master/install.sh)"
+  ```
+
 #### piaware commands
 
 ```bash
@@ -48,23 +55,7 @@ http://my_ip:8080/data/stats.json
 ```
 
 * Claim new client: [flightaware.com/adsb/piaware/claim](https://flightaware.com/adsb/piaware/claim)
-* View your page: [https://flightaware.com/account/manage](https://flightaware.com/account/manage)
-
-#### adsbexchange
-
-* Steps taken from [github.com/adsbxchange/adsb-exchange](https://github.com/adsbxchange/adsb-exchange)
-
-```bash
-wget -O /tmp/axfeed.sh https://adsbexchange.com/feed.sh
-sudo bash /tmp/axfeed.sh
-# web interface (Go to http://my_ip/adsbx)
-sudo bash /usr/local/share/adsbexchange/git/install-or-update-interface.sh
-# check status
-sudo systemctl status adsbexchange-feed
-# restart feed
-sudo systemctl restart adsbexchange-feed
-# uninstall
-sudo bash /usr/local/share/tar1090/uninstall.sh adsbx
+* View your page: [https://flightaware.com/account/manage](https://flightaware.com/account/manage)bash /usr/local/share/tar1090/uninstall.sh adsbx
 ```
 
 * check feed status [adsbexchange.com/myip/](https://adsbexchange.com/myip/) | [adsbx.org/sync](http://adsbx.org/sync)
@@ -91,6 +82,23 @@ http://192.168.x.yy:8542
 # Normal means of shutting down pi will cause data loss. Run this instead:
 sudo shutdown now
 ```
+
+#### adsbexchange (DEPRECATD)
+
+* ADSBx has been sold. Don't do it.
+* Steps taken from [github.com/adsbxchange/adsb-exchange](https://github.com/adsbxchange/adsb-exchange)
+
+```bash
+wget -O /tmp/axfeed.sh https://adsbexchange.com/feed.sh
+sudo bash /tmp/axfeed.sh
+# web interface (Go to http://my_ip/adsbx)
+sudo bash /usr/local/share/adsbexchange/git/install-or-update-interface.sh
+# check status
+sudo systemctl status adsbexchange-feed
+# restart feed
+sudo systemctl restart adsbexchange-feed
+# uninstall
+sudo 
 
 ### Resources
 
