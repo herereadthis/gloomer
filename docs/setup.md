@@ -29,6 +29,7 @@ sudo apt install dump1090-fa lighttpd piaware
   ```
   sudo bash -c "$(wget -nv -O - https://github.com/wiedehopf/tar1090/raw/master/install.sh)"
   ```
+* The URL shall be `http://192.168.x.x/tar1090`
 
 #### piaware commands
 
@@ -52,6 +53,8 @@ http://my_ip:8080/data/aircraft.json
 http://my_ip:8080/data/receiver.json
 # See the stats json
 http://my_ip:8080/data/stats.json
+# upgrade
+sudo apt upgrade piaware-release
 ```
 
 * Claim new client: [flightaware.com/adsb/piaware/claim](https://flightaware.com/adsb/piaware/claim)
