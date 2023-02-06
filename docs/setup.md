@@ -59,9 +59,8 @@ sudo apt upgrade piaware-release
 
 * Claim new client: [flightaware.com/adsb/piaware/claim](https://flightaware.com/adsb/piaware/claim)
 * View your page: [https://flightaware.com/account/manage](https://flightaware.com/account/manage)bash /usr/local/share/tar1090/uninstall.sh adsbx
-```
 
-* check feed status [adsbexchange.com/myip/](https://adsbexchange.com/myip/) | [adsbx.org/sync](http://adsbx.org/sync)
+
 
 #### FlightRadar24
 
@@ -86,22 +85,24 @@ http://192.168.x.yy:8542
 sudo shutdown now
 ```
 
-#### adsbexchange (DEPRECATD)
+#### adsbexchange (DEPRECATED)
 
 * ADSBx has been sold. Don't do it.
 * Steps taken from [github.com/adsbxchange/adsb-exchange](https://github.com/adsbxchange/adsb-exchange)
+  ```bash
+  wget -O /tmp/axfeed.sh https://adsbexchange.com/feed.sh
+  sudo bash /tmp/axfeed.sh
+  # web interface (Go to http://my_ip/adsbx)
+  sudo bash /usr/local/share/adsbexchange/git/install-or-update-interface.sh
+  # check status
+  sudo systemctl status adsbexchange-feed
+  # restart feed
+  sudo systemctl restart adsbexchange-feed
+  # uninstall
+  sudo bash /usr/local/share/tar1090/uninstall.sh adsbx
+  ```
+* check feed status [adsbexchange.com/myip/](https://adsbexchange.com/myip/) | [adsbx.org/sync](http://adsbx.org/sync)
 
-```bash
-wget -O /tmp/axfeed.sh https://adsbexchange.com/feed.sh
-sudo bash /tmp/axfeed.sh
-# web interface (Go to http://my_ip/adsbx)
-sudo bash /usr/local/share/adsbexchange/git/install-or-update-interface.sh
-# check status
-sudo systemctl status adsbexchange-feed
-# restart feed
-sudo systemctl restart adsbexchange-feed
-# uninstall
-sudo 
 
 ### Resources
 
