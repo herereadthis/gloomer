@@ -31,6 +31,17 @@ sudo apt install dump1090-fa lighttpd piaware
   ```
 * The URL shall be `http://192.168.x.x/tar1090`
 
+### Endpoints
+
+```
+# See the json
+http://my_local_ip_address:8080/data/aircraft.json
+# See the receiver's json
+http://my_local_ip_address:8080/data/receiver.json
+# See the stats json
+http://my_local_ip_address:8080/data/stats.json
+```
+
 #### piaware commands
 
 ```bash
@@ -47,12 +58,6 @@ sudo systemctl restart piaware
 # Keep old feeder-id on a new install
 sudo piaware-config feeder-id UUID
 sudo systemctl restart piaware
-# See the json
-http://my_ip:8080/data/aircraft.json
-# See the receiver's json
-http://my_ip:8080/data/receiver.json
-# See the stats json
-http://my_ip:8080/data/stats.json
 # upgrade
 sudo apt upgrade piaware-release
 ```
