@@ -74,14 +74,15 @@ def get_user_root():
         print(err)
         sys.exit()
 
-    home_dir = ''
+    result = ''
     if platform == 'linux':
         home_dir = '/home'
+        user_root = os.getlogin()
+        result = f'{home_dir}/{user_root}'
     elif platform == 'darwin':
-        home_dir = '/Users'
+        result = os.path.expanduser('~')
 
-    user_root = os.getlogin()
-    return f'{home_dir}/{user_root}'
+    return result
 
 
 def round_seconds(obj: dt.datetime) -> dt.datetime:
