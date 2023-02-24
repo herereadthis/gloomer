@@ -40,17 +40,24 @@ def calculate_distance(origin: Tuple[float, float], destination: Tuple[float, fl
 
     return distance
 
-def get_sorted_distances(locations: List[Dict[str, float]], reference: Tuple[float, float]) -> List[Tuple[str, float]]:
+
+def get_sorted_distances(
+        locations: List[Dict[str, float]], reference: Tuple[float, float]
+        ) -> List[Tuple[str, float]]:
     """
-    Calculate the Haversine distance between each location and the reference location, and return a sorted list of tuples
-    containing the name and distance of each location.
+    Calculate the Haversine distance between each location and the reference
+    location, and return a sorted list of tuples containing the name and 
+    distance of each location.
 
     Args:
-        locations (List[Dict[str, float]]): A list of dictionaries containing the name, latitude, and longitude of each location.
-        reference (Tuple[float, float]): The (latitude, longitude) of the reference location.
+        locations (List[Dict[str, float]]): A list of dictionaries containing 
+        the name, latitude, and longitude of each location.
+        reference (Tuple[float, float]): The (latitude, longitude) of the 
+        reference location.
 
     Returns:
-        List[Tuple[str, float]]: A sorted list of tuples containing the name and distance of each location, sorted by distance.
+        List[Tuple[str, float]]: A sorted list of tuples containing the name and
+        distance of each location, sorted by distance.
     """
     distances = []
     for location in locations:
