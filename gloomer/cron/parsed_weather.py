@@ -42,8 +42,7 @@ class ParsedWeather:
             'pressure_in': get_tag_value(root, 'pressure_in'),
             'dewpoint_f': get_tag_value(root, 'dewpoint_f'),
             'dewpoint_c': get_tag_value(root, 'dewpoint_c'),
-            'visibility_mi': get_tag_value(root, 'visibility_mi'),
-            'pressure_in': get_tag_value(root, 'pressure_in')
+            'visibility_mi': get_tag_value(root, 'visibility_mi')
         }
         return weather_report 
 
